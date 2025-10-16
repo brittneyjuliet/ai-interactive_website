@@ -10,16 +10,24 @@ let mody;
 let scalefactor = 1;
 
 let mic;
+let recorder;
+let audiochunks = [];
+let notspeaking = true;
+let level;
 
 let starttime;
 let duration;
 
 let text_fill = 0;
 let textstring;
-// let textstring2;
-// let textstring3;
+let textstring2;
+let textstring3;
 let textlocx;
+let textlocx2;
+let textlocx3;
 let textlocy;
+let textlocy2;
+let textlocy3;
 let mytextsize;
 let texttransparency = 255;
 let threetextstrings = false;
@@ -30,6 +38,7 @@ let playing = false;
 let timer = 0;
 let normtime = 0;
 let xcoord = 0;
+let recording = false;
 
 let scene = 0;
 let activevideo = null;
@@ -181,8 +190,8 @@ function setup() {
 
 	pixelDensity(window.devicePixelRatio);
 
-	mic = new p5.AudioIn();
-	mic.start();
+	// mic = new p5.AudioIn();
+	// mic.start();
 
 	// console.log(modwidth);
 
@@ -192,10 +201,17 @@ function draw() {
 
 	background(0);
 
+	if (mic){
+		level = mic.getLevel();
+		console.log("level: " + level);
+	}
+	
 	// landing loop until enter // begin locked, unlock to play
 	if (scene == 0){
 
-		mytextsize = height/24;
+		threetextstrings = false;
+
+		mytextsize = height/8;
 		textlocx = width/2;
 		textlocy = (height/2) + height/12;
 		texttransparency = 255;
@@ -223,15 +239,25 @@ function draw() {
 	// temple // begin unlocked, lock to play
 	if (scene == 1){
 
+		threetextstrings = false;
+
 		text_fill = 255;
-		mytextsize = (height/12);
+		mytextsize = (height/8);
 		textlocx = width/2;
 		textlocy = height/2;
 		texttransparency = playing ? 0 : 255;
 		textstring = "Speak to begin. Say: I am the Human Agent.";
 
-		updatex();
+		if (level >= .002 && notspeaking && !playing){
+			// updatex();
+			startrecording();
+			starttimer(10);
+		}
 
+		if (recording == true){
+			updatex();
+		}
+		
 		// if (frameCount % 60 == 0 && timer <= 10){
 		// 	normtime = timer++/10;
 		// }
@@ -250,9 +276,9 @@ function draw() {
 	
 		if (afterlanding.time() >= afterlanding.duration()){
 				switchscene(2);
-				starttimer(10);
+				starttimer(5);
 				playing = false;
-
+				// notspeaking = true;
 			}
 		
 	}
@@ -260,8 +286,10 @@ function draw() {
 	// welcome online + intro // begin locked, unlock to play
 	if (scene == 2){
 
+		threetextstrings = false;
+
 		text_fill = 255;
-		mytextsize = (height/12);
+		mytextsize = (height/8);
 		textlocx = width/2;
 		textlocy = height/2;
 		texttransparency = playing ? 0 : 255;
@@ -284,7 +312,6 @@ function draw() {
 				switchscene(3);
 				starttimer(10);
 				playing = false;
-
 			}
 
 	}
@@ -292,62 +319,20 @@ function draw() {
 	// instructions // begin unlocked, lock to continue
 	if (scene == 3){
 
-		// threetextstrings = true;
+		threetextstrings = true;
 
 		text_fill = 255;
-		mytextsize = (height/24);
+		mytextsize = (height/8);
 		textlocx = width/2;
-		textlocy = height/2;
+		textlocy = height/2 - ((height/8));
+		textlocx2 = width/2;
+		textlocy2 = height/2;
+		textlocx3 = width/2;
+		textlocy3 = height/2 + ((height/8));
 		texttransparency = playing ? 0 : 255;
 		textstring = "Speak into the mic - your tone becomes data"; 
-		// textstring2 = "Frequency becomes visual";
-		// textstring3 = "3 questions to elevate your frequency";
-
-		updatex();
-		ellipse(xcoord, height/40, height/60, height/60);
-
-		if (!locked && !keyIsPressed && xcoord >= width ){	
-			lock();
-		}
-
-	}
-
-	if (scene == 3.1){ // begin locked, unlock to continue
-
-		// threetextstrings = true;
-
-		text_fill = 255;
-		mytextsize = (height/24);
-		textlocx = width/2;
-		textlocy = height/2;
-		texttransparency = playing ? 0 : 255;
-		// textstring = "Speak into the mic - your tone becomes data"; 
-		textstring = "Frequency becomes visual";
-		// textstring3 = "3 questions to elevate your frequency";
-
-		updatex();
-		ellipse(xcoord, height/40, height/60, height/60);
-
-		if (locked && !keyIsPressed && xcoord >= width ){	
-			unlock();
-			xcoord = 0;
-			timer = 0;
-		}
-
-	}
-
-	if (scene == 3.2){ // begin unlocked, lock to continue
-
-		// threetextstrings = true;
-
-		text_fill = 255;
-		mytextsize = (height/24);
-		textlocx = width/2;
-		textlocy = height/2;
-		texttransparency = playing ? 0 : 255;
-		// textstring = "Speak into the mic - your tone becomes data"; 
-		// textstring2 = "Frequency becomes visual";
-		textstring = "3 questions to elevate your frequency";
+		textstring2 = "Frequency becomes visual";
+		textstring3 = "3 questions to elevate your frequency";
 
 		updatex();
 		ellipse(xcoord, height/40, height/60, height/60);
@@ -355,22 +340,81 @@ function draw() {
 		if (!locked && !keyIsPressed && xcoord >= width ){	
 			lock();
 			xcoord = 0;
-			timer = 0;
+			notspeaking = true;
 		}
 
 	}
+
+	// if (scene == 3.1){ // begin locked, unlock to continue
+
+	// 	// threetextstrings = true;
+
+	// 	text_fill = 255;
+	// 	mytextsize = (height/24);
+	// 	textlocx = width/2;
+	// 	textlocy = height/2;
+	// 	texttransparency = playing ? 0 : 255;
+	// 	// textstring = "Speak into the mic - your tone becomes data"; 
+	// 	textstring = "Frequency becomes visual";
+	// 	// textstring3 = "3 questions to elevate your frequency";
+
+	// 	updatex();
+	// 	ellipse(xcoord, height/40, height/60, height/60);
+
+	// 	if (locked && !keyIsPressed && xcoord >= width ){	
+	// 		unlock();
+	// 		xcoord = 0;
+	// 		timer = 0;
+	// 	}
+
+	// }
+
+	// if (scene == 3.2){ // begin unlocked, lock to continue
+
+	// 	// threetextstrings = true;
+
+	// 	text_fill = 255;
+	// 	mytextsize = (height/24);
+	// 	textlocx = width/2;
+	// 	textlocy = height/2;
+	// 	texttransparency = playing ? 0 : 255;
+	// 	// textstring = "Speak into the mic - your tone becomes data"; 
+	// 	// textstring2 = "Frequency becomes visual";
+	// 	textstring = "3 questions to elevate your frequency";
+
+	// 	updatex();
+	// 	ellipse(xcoord, height/40, height/60, height/60);
+
+	// 	if (!locked && !keyIsPressed && xcoord >= width ){	
+	// 		lock();
+	// 		xcoord = 0;
+	// 		timer = 0;
+	// 	}
+
+	// }
 
 	// stage 1 // begin locked, unlock to play
 	if (scene == 4){ 
 
+		threetextstrings = false;
+
 		text_fill = 255;
-		mytextsize = (height/12);
+		mytextsize = (height/8);
 		textlocx = width/2;
 		textlocy = height/2;
 		texttransparency = playing ? 0 : 255;
 		textstring = "What are you seeking: Power or Peace?";
 
-		updatex();
+		if (level >= .002 && notspeaking && !playing){
+			// updatex();
+			startrecording();
+			starttimer(10);
+		}
+
+		if (recording == true){
+			updatex();
+		}
+
 		ellipse(xcoord, height/40, height/60, height/60);
 
 		if (locked && !keyIsPressed && xcoord >= width ){	
@@ -381,7 +425,8 @@ function draw() {
 			if (activevideo.time() >= activevideo.duration()){
 				playing = false;
 				switchscene(5);	
-				starttimer(10);
+				// starttimer(10);
+				notspeaking = true;
 			}
 			xcoord = 0;
 			timer = 0;
@@ -392,13 +437,22 @@ function draw() {
 	if (scene == 5){
 
 		text_fill = 255;
-		mytextsize = (height/12);
+		mytextsize = (height/8);
 		textlocx = width/2;
 		textlocy = height/2;
 		texttransparency = playing ? 0 : 255;
 		textstring = "What truth have you hidden from yourself?";
 
-		updatex();
+		if (level >= .002 && notspeaking && !playing){
+			// updatex();
+			startrecording();
+			starttimer(10);
+		}
+
+		if (recording == true){
+			updatex();
+		}
+
 		ellipse(xcoord, height/40, height/60, height/60);
 
 		if (!locked && !keyIsPressed && xcoord >= width ){	
@@ -410,6 +464,7 @@ function draw() {
 				playing = false;
 				switchscene(6);
 				starttimer(10);
+				notspeaking = true;
 			}
 			xcoord = 0;
 			timer = 0;
@@ -421,13 +476,22 @@ function draw() {
 	if (scene == 6){ 
 
 		text_fill = 255;
-		mytextsize = (height/12);
+		mytextsize = (height/8);
 		textlocx = width/2;
 		textlocy = height/2;
 		texttransparency = playing ? 0 : 255;
 		textstring = "Are you ready to recalibrate your reality?";
 
-		updatex();
+		if (level >= .002 && notspeaking && !playing){
+			// updatex();
+			startrecording();
+			starttimer(10);
+		}
+
+		if (recording == true){
+			updatex();
+		}
+
 		ellipse(xcoord, height/40, height/60, height/60);
 
 		if (locked && !keyIsPressed && xcoord >= width ){	
@@ -439,6 +503,7 @@ function draw() {
 				playing = false;
 				switchscene(0);
 				locked = true;
+				notspeaking = true;
 			}
 			xcoord = 0;
 			timer = 0;
@@ -455,19 +520,79 @@ function draw() {
 	// text("Ascended Intelligence", width/2, height/2);
 
 	textSize(mytextsize/scalefactor);
-	text(textstring, textlocx, textlocy);
 
-	console.log("scene: " + scene);
-	console.log("locked: " + locked);
+	if (threetextstrings){
+		text(textstring, textlocx, textlocy);
+		text(textstring2, textlocx2, textlocy2);
+		text(textstring3, textlocx3, textlocy3);
+
+	} else {
+		text(textstring, textlocx, textlocy);
+	}
+	
+
+	// console.log("scene: " + scene);
+	// console.log("locked: " + locked);
 	// console.log("playing: " + playing);
 	// console.log("timer: " + timer);
 	// console.log("normtime: " + normtime);
 	// console.log("xcoord: " + xcoord);
 	// console.log("stage1select: " + stage1select);
 	// console.log("selectrandvid: " + selectrandvid(stage1select));
-	console.log("keypress check: " + keyIsPressed);
+	// console.log("keypress check: " + keyIsPressed);
 	// console.log("aspect ratio: " + aspectratio);
+	// console.log("notspeaking: " + notspeaking);
+	// console.log("width: " + width);
 	
+}
+
+async function startrecording() {
+  notspeaking = false;
+  recording = true;
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  recorder = new MediaRecorder(stream);
+
+  recorder.ondataavailable = e => audiochunks.push(e.data);
+  recorder.onstop = playRecording;
+
+  recorder.start();
+  console.log('Recording...');
+
+  // Stop after 5 seconds
+  setTimeout(() => recorder.stop(), 5000);
+  
+}
+
+function playRecording() {
+  recording = false;
+  const blob = new Blob(audiochunks, { type: 'audio/wav' });
+  audiochunks = []; // clear buffer
+
+  const url = URL.createObjectURL(blob);
+  const audio = new Audio(url);
+  
+  // Unlock after playback finishes
+  audio.onended = () => {
+	
+
+	if (scene == 1){
+		switchvideo(afterlanding);
+		locked = true;
+	} else if (scene == 4){
+		unlock();
+	} else if (scene == 5){
+		lock();
+	} else if (scene ==6){
+		unlock();
+	}
+
+    // notspeaking = true; need to reset this elsewhere
+    console.log('Ready for next recording');
+  };
+  
+  audio.play();
+
+  console.log('Playback started');
 }
 
 function starttimer(seconds){
@@ -476,10 +601,11 @@ function starttimer(seconds){
 }
 
 function updatex(){
+
 	let progress = (millis() - starttime)/duration;
 	progress = constrain(progress, 0, 1);
-
 	xcoord = progress * width;
+		
 }
 
 function unlock(){
@@ -513,13 +639,13 @@ function unlock(){
 		locked = false;
 	}
 
-	if (scene == 3.1){
-		switchscene(3.2);
-		starttimer(10);
-		locked = false;
-	}
+	// if (scene == 3.1){
+	// 	switchscene(3.2);
+	// 	starttimer(10);
+	// 	locked = false;
+	// }
 
-	if (scene == 4){
+	if (scene == 4 && locked){
 		activevideo = selectrandvid(stage1select);
 		if (playing){
 			activevideo.pause();
@@ -533,6 +659,8 @@ function unlock(){
 
 	if (scene == 6){
 		activevideo = selectrandvid(stage3select);
+		aspectratio = 1.78;
+		setup();
 		if (playing){
 			activevideo.pause();
 		} else {
@@ -561,16 +689,17 @@ function lock(){
 	}
 
 	if (scene == 3){
-		switchscene(3.1);
-		starttimer(10);
 		locked = true;
+		switchscene(4);
+		// starttimer(10);
+		
 	}
 
-	if (scene == 3.2){
-		switchscene(4);
-		starttimer(10);
-		locked = true;
-	}
+	// if (scene == 3.2){
+	// 	switchscene(4);
+	// 	starttimer(10);
+	// 	locked = true;
+	// }
 
 	if (scene == 5){
 		activevideo = selectrandvid(stage2select);
@@ -593,6 +722,14 @@ function selectrandvid(stage){
 }
 
 function mousePressed() {
+
+	if (!mic){
+		userStartAudio();
+
+		mic = new p5.AudioIn();
+		mic.start(() => console.log("mic started"), err => console.error(err));
+	}
+
   // Check if click is in the "Enter" button area
   if (scene == 0 && mouseX/width >= 0.46 && mouseX/width <= 0.53 && mouseY/height >= 0.569 && mouseY/height <= 0.604) {
 
@@ -604,7 +741,7 @@ function mousePressed() {
 
 	playing = !playing;
 	switchscene(1);
-	starttimer(10);
+	// starttimer(10);
     
   }
 }
