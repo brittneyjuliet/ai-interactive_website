@@ -1,3 +1,5 @@
+let density;
+
 let moviewidth = 1920;
 let movieheight = 1080;
 let aspectratio = moviewidth/movieheight;
@@ -31,6 +33,9 @@ let textlocy3;
 let mytextsize;
 let texttransparency = 255;
 let threetextstrings = false;
+let breathe = 255;
+let speed = 2;
+let ellipsefill = 255;
 
 let loop;
 let playing = false;
@@ -51,12 +56,15 @@ let randselect;
 let mousepressactive = false;
 
 let moviefiles = [];
-let stage1select = [];
-let stage2select = [];
-let stage3select = [];
+let stage1select;
+let stage2select;
+let stage3select;
 
 let autostarttoggle = false;
 let locked = true;
+
+let detectedemotion;
+let detecting = false;
 
 let filetest = {
 	landing: {
@@ -101,11 +109,21 @@ function preload(){
 	s1sad = createVideo(moviefiles[2][4]);
 	s1sad.hide();
 
-	stage1select[0] = s1angry;
-	stage1select[1] = s1calm;
-	stage1select[2] = s1curious;
-	stage1select[3] = s1joy;
-	stage1select[4] = s1sad;
+	// stage1select[0] = s1angry;
+	// stage1select[1] = s1calm;
+	// stage1select[2] = s1curious;
+	// stage1select[3] = s1joy;
+	// stage1select[4] = s1sad;
+
+	stage1select = {
+		anger_fear: s1angry,
+		calm_content: s1calm,
+		curious_reflective: s1curious,
+		joy_excited: s1joy,
+		sadness: s1sad
+	}
+
+	// console.log(stage1select.anger_fear);
 
 	// stage2
 	s2angry = createVideo(moviefiles[3][0]);
@@ -123,11 +141,19 @@ function preload(){
 	s2sad = createVideo(moviefiles[3][4]);
 	s2sad.hide();
 
-	stage2select[0] = s2angry;
-	stage2select[1] = s2calm;
-	stage2select[2] = s2curious;
-	stage2select[3] = s2joy;
-	stage2select[4] = s2sad;
+	// stage2select[0] = s2angry;
+	// stage2select[1] = s2calm;
+	// stage2select[2] = s2curious;
+	// stage2select[3] = s2joy;
+	// stage2select[4] = s2sad;
+
+	stage2select = {
+		anger_fear: s2angry,
+		calm_content: s2calm,
+		curious_reflective: s2curious,
+		joy_excited: s2joy,
+		sadness: s2sad
+	}
 
 	// stage3
 	s3angry = createVideo(moviefiles[4][0]);
@@ -145,11 +171,19 @@ function preload(){
 	s3sad = createVideo(moviefiles[4][4]);
 	s3sad.hide();
 
-	stage3select[0] = s3angry;
-	stage3select[1] = s3calm;
-	stage3select[2] = s3curious;
-	stage3select[3] = s3joy;
-	stage3select[4] = s3sad;
+	// stage3select[0] = s3angry;
+	// stage3select[1] = s3calm;
+	// stage3select[2] = s3curious;
+	// stage3select[3] = s3joy;
+	// stage3select[4] = s3sad;
+
+	stage3select = {
+		anger_fear: s3angry,
+		calm_content: s3calm,
+		curious_reflective: s3curious,
+		joy_excited: s3joy,
+		sadness: s3sad
+	}
 }
 
 function windowResized(){
@@ -188,12 +222,13 @@ function setup() {
 	textAlign(CENTER, CENTER);
 	rectMode(CENTER);
 
-	pixelDensity(window.devicePixelRatio);
+	density = pixelDensity();
+	pixelDensity(density);
 
 	// mic = new p5.AudioIn();
 	// mic.start();
 
-	// console.log(modwidth);
+	// console.log(density);
 
 }
 
@@ -203,7 +238,7 @@ function draw() {
 
 	if (mic){
 		level = mic.getLevel();
-		console.log("level: " + level);
+		// console.log("level: " + level);
 	}
 	
 	// landing loop until enter // begin locked, unlock to play
@@ -262,8 +297,20 @@ function draw() {
 		// 	normtime = timer++/10;
 		// }
 
+		push();
+
+		if (!detecting){
+			ellipsefill = 255;
+		} else {
+			ellipsefill -= 5;
+		}
+
+		fill(ellipsefill);
 		ellipse(xcoord, height/40, height/60, height/60);
 		// xcoord += (normtime*width)/600;
+
+		pop();
+		
 
 		if (playing){
 			xcoord = 0;
@@ -276,7 +323,7 @@ function draw() {
 	
 		if (afterlanding.time() >= afterlanding.duration()){
 				switchscene(2);
-				starttimer(5);
+				starttimer(3);
 				playing = false;
 				// notspeaking = true;
 			}
@@ -296,8 +343,8 @@ function draw() {
 		textstring = "Welcome Online Human Agent";
 
 		updatex();
-		ellipse(xcoord, height/40, height/60, height/60);
-		xcoord += normtime;
+		// ellipse(xcoord, height/40, height/60, height/60);
+		// xcoord += normtime;
 
 		if (playing){
 			xcoord = 0;
@@ -415,7 +462,19 @@ function draw() {
 			updatex();
 		}
 
+		push();
+
+		if (!detecting){
+			ellipsefill = 255;
+		} else {
+			ellipsefill -= 5;
+		}
+
+		fill(ellipsefill);
 		ellipse(xcoord, height/40, height/60, height/60);
+		// xcoord += (normtime*width)/600;
+
+		pop();
 
 		if (locked && !keyIsPressed && xcoord >= width ){	
 			unlock();
@@ -453,7 +512,19 @@ function draw() {
 			updatex();
 		}
 
+		push();
+
+		if (!detecting){
+			ellipsefill = 255;
+		} else {
+			ellipsefill -= 5;
+		}
+
+		fill(ellipsefill);
 		ellipse(xcoord, height/40, height/60, height/60);
+		// xcoord += (normtime*width)/600;
+
+		pop();
 
 		if (!locked && !keyIsPressed && xcoord >= width ){	
 			lock();
@@ -463,7 +534,7 @@ function draw() {
 			if (activevideo.time() >= activevideo.duration()){
 				playing = false;
 				switchscene(6);
-				starttimer(10);
+				// starttimer(10);
 				notspeaking = true;
 			}
 			xcoord = 0;
@@ -492,7 +563,19 @@ function draw() {
 			updatex();
 		}
 
+		push();
+
+		if (!detecting){
+			ellipsefill = 255;
+		} else {
+			ellipsefill -= 5;
+		}
+
+		fill(ellipsefill);
 		ellipse(xcoord, height/40, height/60, height/60);
+		// xcoord += (normtime*width)/600;
+
+		pop();
 
 		if (locked && !keyIsPressed && xcoord >= width ){	
 			unlock();
@@ -529,6 +612,37 @@ function draw() {
 	} else {
 		text(textstring, textlocx, textlocy);
 	}
+
+	
+
+	push();
+
+	breathe += speed;
+
+	if (breathe > 255 || breathe < 0){
+		speed = -speed;
+	} 
+
+	if (detecting){
+
+		if (scene == 1){
+			fill(breathe, 255);
+			text('Calibrating', width/2, height-(height/6));
+
+		} else {
+			fill(breathe, 255);
+			text('Detecting Emotion', width/2, height-(height/6));
+
+		}
+
+	} else {
+
+		fill(255, 0);
+		text('Detecting Emotion', width/2, height-(height/6));
+
+	}
+
+	pop();
 	
 
 	// console.log("scene: " + scene);
@@ -543,6 +657,8 @@ function draw() {
 	// console.log("aspect ratio: " + aspectratio);
 	// console.log("notspeaking: " + notspeaking);
 	// console.log("width: " + width);
+	// console.log('detecting: ' + detecting);
+	// console.log('breathe: ' + breathe);
 	
 }
 
@@ -553,20 +669,25 @@ async function startrecording() {
   recorder = new MediaRecorder(stream);
 
   recorder.ondataavailable = e => audiochunks.push(e.data);
-  recorder.onstop = playRecording;
 
+  if (scene == 1 || scene == 4 || scene == 5 || scene == 6){
+	recorder.onstop = predictemotion;
+  }
+  
   recorder.start();
-  console.log('Recording...');
+//   console.log('recording...');
 
   // Stop after 5 seconds
   setTimeout(() => recorder.stop(), 5000);
   
 }
 
-function playRecording() {
+function predictemotion() {
   recording = false;
   const blob = new Blob(audiochunks, { type: 'audio/wav' });
   audiochunks = []; // clear buffer
+
+  sendAudioToAPI(blob);
 
   const url = URL.createObjectURL(blob);
   const audio = new Audio(url);
@@ -575,24 +696,62 @@ function playRecording() {
   audio.onended = () => {
 	
 
-	if (scene == 1){
-		switchvideo(afterlanding);
-		locked = true;
-	} else if (scene == 4){
-		unlock();
-	} else if (scene == 5){
-		lock();
-	} else if (scene ==6){
-		unlock();
-	}
+	// if (scene == 1){
+	// 	switchvideo(afterlanding);
+	// 	locked = true;
+	// } else if (scene == 4){
+	// 	unlock();
+	// } else if (scene == 5){
+	// 	lock();
+	// } else if (scene ==6){
+	// 	unlock();
+	// }
 
     // notspeaking = true; need to reset this elsewhere
-    console.log('Ready for next recording');
+    // console.log('Ready for next recording');
   };
   
-  audio.play();
+//   audio.play();
+//   console.log(blob.type);
 
-  console.log('Playback started');
+  console.log('prediction started');
+  
+}
+
+async function sendAudioToAPI(blob){
+	try {
+		const formData = new FormData();
+		formData.append('file', blob, 'recording.wav');
+		console.log('predicting...');
+		detecting = true;
+
+		const response = await fetch('http://localhost:8000/predict',
+			{
+				method: 'POST',
+				body: formData
+			}
+		);
+
+		const result = await response.json();
+		console.log('predicted emotion: ', result.emotion);
+		detectedemotion = result.emotion;
+		detecting = false;
+
+		if (scene == 1){
+			switchvideo(afterlanding);
+			locked = true;
+		} else if (scene == 4){
+			unlock();
+		} else if (scene == 5){
+			lock();
+		} else if (scene ==6){
+			unlock();
+		}
+
+		return result.emotion;
+	} catch (err) {
+		console.error('error sending audio to hf space: ', err);
+	}
 }
 
 function starttimer(seconds){
@@ -646,7 +805,9 @@ function unlock(){
 	// }
 
 	if (scene == 4 && locked){
-		activevideo = selectrandvid(stage1select);
+		// activevideo = selectrandvid(stage1select);
+		activevideo = stage1select[detectedemotion];
+		
 		if (playing){
 			activevideo.pause();
 		} else {
@@ -658,7 +819,8 @@ function unlock(){
 	}
 
 	if (scene == 6){
-		activevideo = selectrandvid(stage3select);
+		// activevideo = selectrandvid(stage3select);
+		activevideo = stage3select[detectedemotion];
 		aspectratio = 1.78;
 		setup();
 		if (playing){
@@ -702,7 +864,8 @@ function lock(){
 	// }
 
 	if (scene == 5){
-		activevideo = selectrandvid(stage2select);
+		// activevideo = selectrandvid(stage2select);
+		activevideo = stage2select[detectedemotion];
 		if (playing){
 			activevideo.pause();
 		} else {
