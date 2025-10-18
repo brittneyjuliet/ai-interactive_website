@@ -232,7 +232,7 @@ function setup() {
 	textcontainer.fill(255);
 	// textcontainer.background(127);
 	textcontainer.textSize((modheight/12)/scalefactor);
-	textcontainer.text('this is a textcontainer test', modwidth/2, modheight/4);
+	textcontainer.text('Speak to begin. Say: I am the Human Agent.', modwidth/2, modheight/4);
 
 	// mic = new p5.AudioIn();
 	// mic.start();
