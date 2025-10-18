@@ -222,8 +222,8 @@ function setup() {
 	textAlign(CENTER, CENTER);
 	rectMode(CENTER);
 
-	density = pixelDensity();
-	pixelDensity(density);
+	// density = pixelDensity();
+	pixelDensity(1);
 
 	// mic = new p5.AudioIn();
 	// mic.start();
