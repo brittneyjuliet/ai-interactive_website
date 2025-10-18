@@ -623,6 +623,8 @@ function draw() {
 		speed = -speed;
 	} 
 
+	textSize((height/12)/scalefactor);
+
 	if (detecting){
 
 		if (scene == 1){
@@ -725,7 +727,7 @@ async function sendAudioToAPI(blob){
 		console.log('predicting...');
 		detecting = true;
 
-		const response = await fetch('https://ai-emotion-api.onrender.com/predict',
+		const response = await fetch('https://huggingface.co/spaces/brittneyjuliet/ascended-intelligence-emotion-detection/api/predict',
 			{
 				method: 'POST',
 				body: formData
