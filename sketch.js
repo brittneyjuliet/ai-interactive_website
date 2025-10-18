@@ -357,7 +357,7 @@ function draw() {
 
 		if (intro.time() >= intro.duration()){
 				switchscene(3);
-				starttimer(10);
+				starttimer(5);
 				playing = false;
 			}
 
@@ -382,7 +382,7 @@ function draw() {
 		textstring3 = "3 questions to elevate your frequency";
 
 		updatex();
-		ellipse(xcoord, height/40, height/60, height/60);
+		// ellipse(xcoord, height/40, height/60, height/60);
 
 		if (!locked && !keyIsPressed && xcoord >= width ){	
 			lock();
