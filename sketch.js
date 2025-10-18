@@ -1,4 +1,5 @@
 let density;
+let textcontainer;
 
 let moviewidth = 1920;
 let movieheight = 1080;
@@ -224,6 +225,14 @@ function setup() {
 
 	density = pixelDensity();
 	pixelDensity(density);
+
+	
+	textcontainer = createGraphics(modwidth, modheight);
+	textcontainer.textAlign(CENTER);
+	textcontainer.fill(255);
+	// textcontainer.background(127);
+	textcontainer.textSize((modheight/12)/scalefactor);
+	textcontainer.text('this is a textcontainer test', modwidth/2, modheight/4);
 
 	// mic = new p5.AudioIn();
 	// mic.start();
@@ -649,7 +658,9 @@ function draw() {
 	}
 
 	pop();
+
 	
+	image(textcontainer, modx, mody);
 
 	// console.log("scene: " + scene);
 	// console.log("locked: " + locked);
