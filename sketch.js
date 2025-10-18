@@ -725,7 +725,7 @@ async function sendAudioToAPI(blob){
 		console.log('predicting...');
 		detecting = true;
 
-		const response = await fetch('http://localhost:8000/predict',
+		const response = await fetch('https://ai-emotion-api.onrender.com',
 			{
 				method: 'POST',
 				body: formData
