@@ -223,7 +223,7 @@ function setup() {
 	rectMode(CENTER);
 
 	density = pixelDensity();
-	pixelDensity(pixelDensity);
+	pixelDensity(density);
 
 	// mic = new p5.AudioIn();
 	// mic.start();
