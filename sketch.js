@@ -286,7 +286,7 @@ function draw() {
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
 			startrecording();
-			starttimer(10); //10
+			starttimer(5); //10
 		}
 
 		if (recording == true){
@@ -317,9 +317,10 @@ function draw() {
 			timer = 0;
 		}
 
-		if (!locked && !keyIsPressed && xcoord >= width ){	
-			lock();
-		}
+		// removing due to voice input
+		// if (!locked && !keyIsPressed && xcoord >= width){	
+		// 	lock();
+		// }
 	
 		if (afterlanding.time() >= afterlanding.duration()){
 				switchscene(2);
@@ -455,7 +456,7 @@ function draw() {
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
 			startrecording();
-			starttimer(10); //10
+			starttimer(5); //10
 		}
 
 		if (recording == true){
@@ -476,9 +477,10 @@ function draw() {
 
 		pop();
 
-		if (locked && !keyIsPressed && xcoord >= width ){	
-			unlock();
-		}
+		// voice input - removing
+		// if (locked && !keyIsPressed && xcoord >= width ){	
+		// 	unlock();
+		// }
 
 		if (playing){
 			if (activevideo.time() >= activevideo.duration()){
@@ -505,7 +507,7 @@ function draw() {
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
 			startrecording();
-			starttimer(10); //10
+			starttimer(5); //10
 		}
 
 		if (recording == true){
@@ -526,9 +528,10 @@ function draw() {
 
 		pop();
 
-		if (!locked && !keyIsPressed && xcoord >= width ){	
-			lock();
-		}
+		// voice input - removing
+		// if (!locked && !keyIsPressed && xcoord >= width ){	
+		// 	lock();
+		// }
 
 		if (playing){
 			if (activevideo.time() >= activevideo.duration()){
@@ -556,7 +559,7 @@ function draw() {
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
 			startrecording();
-			starttimer(10); //10
+			starttimer(5); //10
 		}
 
 		if (recording == true){
@@ -577,9 +580,10 @@ function draw() {
 
 		pop();
 
-		if (locked && !keyIsPressed && xcoord >= width ){	
-			unlock();
-		}
+		// voice input - removing
+		// if (locked && !keyIsPressed && xcoord >= width ){	
+		// 	unlock();
+		// }
 
 		if (playing){
 			if (activevideo.time() >= activevideo.duration()){
