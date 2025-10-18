@@ -286,7 +286,7 @@ function draw() {
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
 			startrecording();
-			starttimer(5); //10
+			starttimer(10); //10
 		}
 
 		if (recording == true){
@@ -455,7 +455,7 @@ function draw() {
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
 			startrecording();
-			starttimer(5); //10
+			starttimer(10); //10
 		}
 
 		if (recording == true){
@@ -505,7 +505,7 @@ function draw() {
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
 			startrecording();
-			starttimer(5); //10
+			starttimer(10); //10
 		}
 
 		if (recording == true){
@@ -556,7 +556,7 @@ function draw() {
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
 			startrecording();
-			starttimer(5); //10
+			starttimer(10); //10
 		}
 
 		if (recording == true){
