@@ -898,7 +898,7 @@ function unlock(){
 	// 	locked = false;
 	// }
 
-	if (scene == 4 && locked){
+	if (scene == 4){
 		// activevideo = selectrandvid(stage1select);
 		activevideo = stage1select[detectedemotion];
 		
