@@ -1,5 +1,6 @@
 let testbool = false;
 let landingloaded = false;
+let done = false;
 
 let density;
 let textcontainer;
@@ -48,7 +49,7 @@ let playing = false;
 
 let timer = 0;
 let normtime = 0;
-let xcoord = 0;
+let xcoord = -10;
 let recording = false;
 
 let scene = 0;
@@ -88,6 +89,9 @@ function preload(){
 	moviefiles[2] = new Array("assets/anger2compressed.mp4", "assets/calm2compressed.mp4", "assets/curious2compressed.mp4", "assets/joy2compressed.mp4", "assets/sad2compressed.mp4");
 	moviefiles[3] = new Array("assets/angercompressed.mp4", "assets/calmcompressed.mp4", "assets/curiouscompressed.mp4", "assets/joycompressed.mp4", "assets/sadcompressed.mp4");
 	moviefiles[4] = new Array("assets/anger3compressed.mp4", "assets/calm3compressed.mp4", "assets/curious3compressed.mp4", "assets/joy3compressed.mp4", "assets/sad3compressed.mp4");
+
+	// end
+	endscreen = loadImage("assets/placeholder.jpg");
 
 	//pre-experience
 	landing = createVideo(moviefiles[0], showenter);
@@ -496,7 +500,7 @@ function draw() {
 		texttransparency = playing ? 0 : 255;
 
 		if (!detected){
-			textstring = "What are you seeking: Power or Peace?";
+			textstring = "WHAT ARE YOU SEEKING: POWER OR PEACE?";
 		} else {
 			textstring = detectedemotion;
 		}
@@ -555,7 +559,7 @@ function draw() {
 		texttransparency = playing ? 0 : 255;
 
 		if (!detected){
-			textstring = "What truth have you hidden from yourself?";
+			textstring = "WHAT TRUTH HAVE YOU HIDDEN FROM YOURSELF?";
 		} else {
 			textstring = detectedemotion;
 		}
@@ -615,7 +619,7 @@ function draw() {
 		texttransparency = playing ? 0 : 255;
 
 		if (!detected){
-			textstring = "Are you ready to recalibrate your reality?";
+			textstring = "ARE YOU READY TO RECALIBRATE YOUR REALITY?";
 		} else {
 			textstring = detectedemotion;
 		}
@@ -653,9 +657,10 @@ function draw() {
 		if (playing){
 			if (activevideo.time() >= activevideo.duration()){
 				playing = false;
-				switchscene(0);
+				switchscene(7);
 				locked = true;
 				notspeaking = true;
+				done = true;
 			}
 			xcoord = -10;
 			timer = 0;
@@ -728,6 +733,11 @@ function draw() {
 
 	}
 	pop();
+
+	if (done){
+		image(endscreen, modx, mody, modwidth, modheight, 0, 0, endscreen.width, endscreen.height, constrain);
+	}
+
 
 	// textbounds
 	// textcontainer.background(200, 127);
