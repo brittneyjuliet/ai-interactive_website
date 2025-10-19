@@ -747,7 +747,7 @@ function draw() {
 	// console.log("modwidth: " + modwidth);
 	// console.log('detecting: ' + detecting);
 	// console.log('breathe: ' + breathe);
-	console.log('detected: ' + detected);
+	// console.log('detected: ' + detected);
 	
 	
 }
