@@ -40,7 +40,7 @@ let textlocy3;
 let mytextsize;
 let texttransparency = 0;
 let threetextstrings = false;
-let breathe = 255;
+let breathe = 0;
 let speed = 2;
 let ellipsefill = 255;
 
@@ -91,7 +91,7 @@ function preload(){
 	moviefiles[4] = new Array("assets/anger3compressed.mp4", "assets/calm3compressed.mp4", "assets/curious3compressed.mp4", "assets/joy3compressed.mp4", "assets/sad3compressed.mp4");
 
 	// end
-	endscreen = loadImage("assets/placeholder.jpg");
+	endscreen = loadImage("assets/final.jpg");
 
 	//pre-experience
 	landing = createVideo(moviefiles[0], showenter);
@@ -271,7 +271,7 @@ function draw() {
 
 		if (landingloaded && texttransparency < 256){
 			texttransparency+=2;
-			console.log('test');
+			// console.log('test');
 		}
 
 		mytextsize = modheight/18;
@@ -314,7 +314,7 @@ function draw() {
 		texttransparency = playing ? 0 : 255;
 
 		if (!detected){
-			textstring = "SPEAK TO BEGIN. SAY: I AM THE HUMAN AGENT.";
+			textstring = "SPEAK TO LAUNCH PROTOTYPE BY SAYING 'I AM A HUMAN AGENT!'";
 		} else {
 			textstring = "CALIBRATION COMPLETE";
 		}
@@ -401,7 +401,7 @@ function draw() {
 
 		if (intro.time() >= intro.duration()){
 				switchscene(3);
-				starttimer(5);
+				starttimer(7);
 				playing = false;
 				detected = false;
 			}
@@ -502,7 +502,7 @@ function draw() {
 		if (!detected){
 			textstring = "WHAT ARE YOU SEEKING: POWER OR PEACE?";
 		} else {
-			textstring = detectedemotion;
+			textstring = "YOUR FREQUENCY IS: " + detectedemotion;
 		}
 		
 
@@ -561,7 +561,7 @@ function draw() {
 		if (!detected){
 			textstring = "WHAT TRUTH HAVE YOU HIDDEN FROM YOURSELF?";
 		} else {
-			textstring = detectedemotion;
+			textstring = "YOUR FREQUENCY IS: " + detectedemotion;
 		}
 		
 
@@ -621,7 +621,7 @@ function draw() {
 		if (!detected){
 			textstring = "ARE YOU READY TO RECALIBRATE YOUR REALITY?";
 		} else {
-			textstring = detectedemotion;
+			textstring = "YOUR FREQUENCY IS: " + detectedemotion;
 		}
 		
 
@@ -832,7 +832,7 @@ async function sendAudioToAPI(blob){
 		formData.append('file', blob, 'recording.wav');
 		console.log('predicting...');
 		detecting = true;
-		breathe = 255;
+		breathe = 1;
 
 		// https://ai-emotion-api.sliplane.app/predict
 		// http://localhost:7860/predict
@@ -882,6 +882,7 @@ async function sendAudioToAPI(blob){
 function starttimer(seconds){
 	duration = seconds * 1000;
 	starttime = millis();
+	// timerbool = true;
 }
 
 function updatex(){
