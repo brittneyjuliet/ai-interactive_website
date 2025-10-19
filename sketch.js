@@ -803,8 +803,6 @@ function predictemotion() {
   
 //   audio.play();
 //   console.log(blob.type);
-
-  console.log('prediction started');
   
 }
 
