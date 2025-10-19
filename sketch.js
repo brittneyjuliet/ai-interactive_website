@@ -122,11 +122,11 @@ function preload(){
 	// stage1select[4] = s1sad;
 
 	stage1select = {
-		anger_fear: s1angry,
-		calm_content: s1calm,
-		curious_reflective: s1curious,
-		joy_excited: s1joy,
-		sadness: s1sad
+		ANGER_FEAR: s1angry,
+		CALM_CONTENT: s1calm,
+		CURIOUS_REFLECTIVE: s1curious,
+		JOY_EXCITED: s1joy,
+		SADNESS: s1sad
 	}
 
 	// console.log(stage1select.anger_fear);
@@ -154,11 +154,11 @@ function preload(){
 	// stage2select[4] = s2sad;
 
 	stage2select = {
-		anger_fear: s2angry,
-		calm_content: s2calm,
-		curious_reflective: s2curious,
-		joy_excited: s2joy,
-		sadness: s2sad
+		ANGER_FEAR: s2angry,
+		CALM_CONTENT: s2calm,
+		CURIOUS_REFLECTIVE: s2curious,
+		JOY_EXCITED: s2joy,
+		SADNESS: s2sad
 	}
 
 	// stage3
@@ -184,11 +184,11 @@ function preload(){
 	// stage3select[4] = s3sad;
 
 	stage3select = {
-		anger_fear: s3angry,
-		calm_content: s3calm,
-		curious_reflective: s3curious,
-		joy_excited: s3joy,
-		sadness: s3sad
+		ANGER_FEAR: s3angry,
+		CALM_CONTENT: s3calm,
+		CURIOUS_REFLECTIVE: s3curious,
+		JOY_EXCITED: s3joy,
+		SADNESS: s3sad
 	}
 
 }
@@ -389,6 +389,7 @@ function draw() {
 				switchscene(3);
 				starttimer(5);
 				playing = false;
+				detected = false;
 			}
 
 	}
@@ -730,7 +731,7 @@ function draw() {
 	// image(textcontainer, modx, mody);
 	
 	// console.log("scene: " + scene);
-	console.log("locked: " + locked);
+	// console.log("locked: " + locked);
 	// console.log("playing: " + playing);
 	// console.log("timer: " + timer);
 	// console.log("normtime: " + normtime);
@@ -746,7 +747,7 @@ function draw() {
 	// console.log("modwidth: " + modwidth);
 	// console.log('detecting: ' + detecting);
 	// console.log('breathe: ' + breathe);
-	// console.log('detected: ' + detected);
+	console.log('detected: ' + detected);
 	
 	
 }
@@ -813,10 +814,11 @@ async function sendAudioToAPI(blob){
 		formData.append('file', blob, 'recording.wav');
 		console.log('predicting...');
 		detecting = true;
+		breathe = 255;
 
 		// https://ai-emotion-api.sliplane.app/predict
 		// http://localhost:7860/predict
-		const response = await fetch('http://localhost:7860/predict',
+		const response = await fetch('https://ai-emotion-api.sliplane.app/predict',
 			{
 				method: 'POST',
 				body: formData
@@ -830,16 +832,27 @@ async function sendAudioToAPI(blob){
 		detected = true;
 
 		if (scene == 1){
-			setTimeout(() => switchvideo(afterlanding), 3000);
+
+			// proposed logic
+			setTimeout(() => switchscene(2), 3000);
+			starttimer(6);
+			playing = false;
+			xcoord = -10;
+			
+			// current logic
+			// // setTimeout(() => switchvideo(afterlanding), 3000);
 			textcontainer.clear();
 			// switchvideo(afterlanding);
 			locked = true;
 		} else if (scene == 4){
 			setTimeout(() => unlock(), 3000);
+			textcontainer.clear();
 		} else if (scene == 5){
 			setTimeout(() => lock(), 3000);
-		} else if (scene ==6){
+			textcontainer.clear();
+		} else if (scene == 6){
 			setTimeout(() => unlock(), 3000);
+			textcontainer.clear();
 		}
 
 		return result.emotion;
@@ -1022,14 +1035,6 @@ function keyPressed(){
 	}
 
 	else if (scene == 3 && keyCode == 13 && !locked){
-		lock();
-	}
-
-	else if (scene == 3.1 && keyCode == 13 && locked){
-		unlock();
-	}
-
-	else if (scene == 3.2 && keyCode == 13 && !locked){
 		lock();
 	}
 
