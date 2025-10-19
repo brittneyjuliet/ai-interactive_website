@@ -816,7 +816,7 @@ async function sendAudioToAPI(blob){
 
 		// https://ai-emotion-api.sliplane.app/predict
 		// http://localhost:7860/predict
-		const response = await fetch('https://ai-emotion-api.sliplane.app/predict',
+		const response = await fetch('http://localhost:7860/predict',
 			{
 				method: 'POST',
 				body: formData
