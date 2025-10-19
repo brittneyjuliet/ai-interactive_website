@@ -1019,36 +1019,36 @@ function mousePressed() {
   }
 }
 
-function keyPressed(){
-	if (scene == 1 && keyCode == 13 && !locked){
-		switchvideo(afterlanding);
-		locked = true;
-	}
+// function keyPressed(){
+// 	if (scene == 1 && keyCode == 13 && !locked){
+// 		switchvideo(afterlanding);
+// 		locked = true;
+// 	}
 
-	else if (scene == 2 && keyCode == 13 && locked){
-		locked = false;
-		aspectratio = 2.35;
-		setup();
-		switchvideo(intro);
-	}
+// 	else if (scene == 2 && keyCode == 13 && locked){
+// 		locked = false;
+// 		aspectratio = 2.35;
+// 		setup();
+// 		switchvideo(intro);
+// 	}
 
-	else if (scene == 3 && keyCode == 13 && !locked){
-		lock();
-	}
+// 	else if (scene == 3 && keyCode == 13 && !locked){
+// 		lock();
+// 	}
 
-	else if (scene == 4 && keyCode == 13 && locked){
-		unlock();
-	}
+// 	else if (scene == 4 && keyCode == 13 && locked){
+// 		unlock();
+// 	}
 
-	else if (scene == 5 && keyCode == 13 && !locked){
-		lock();
-	}
+// 	else if (scene == 5 && keyCode == 13 && !locked){
+// 		lock();
+// 	}
 
-	else if (scene == 6 && keyCode == 13 && locked){
-		unlock();
-	}
-	textcontainer.clear();
-}
+// 	else if (scene == 6 && keyCode == 13 && locked){
+// 		unlock();
+// 	}
+// 	textcontainer.clear();
+// }
 
 function switchvideo(v){
 
