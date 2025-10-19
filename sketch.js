@@ -1,5 +1,9 @@
+let testbool = false;
+
 let density;
 let textcontainer;
+let textcontainer2;
+let textcontainer3;
 
 let moviewidth = 1920;
 let movieheight = 1080;
@@ -66,6 +70,7 @@ let locked = true;
 
 let detectedemotion;
 let detecting = false;
+let detected = false;
 
 let filetest = {
 	landing: {
@@ -185,6 +190,7 @@ function preload(){
 		joy_excited: s3joy,
 		sadness: s3sad
 	}
+
 }
 
 function windowResized(){
@@ -226,13 +232,12 @@ function setup() {
 	density = pixelDensity();
 	pixelDensity(density);
 
-	
 	textcontainer = createGraphics(modwidth, modheight);
-	textcontainer.textAlign(CENTER);
-	textcontainer.fill(255);
-	// textcontainer.background(127);
-	textcontainer.textSize((modheight/12)/scalefactor);
-	textcontainer.text('Speak to begin. Say: I am the Human Agent.', modwidth/2, modheight/4);
+	textcontainer.textAlign(CENTER, CENTER);
+	textcontainer2 = createGraphics(modwidth, modheight);
+	textcontainer2.textAlign(CENTER, CENTER);
+	textcontainer3 = createGraphics(modwidth, modheight);
+	textcontainer3.textAlign(CENTER, CENTER);
 
 	// mic = new p5.AudioIn();
 	// mic.start();
@@ -255,21 +260,24 @@ function draw() {
 
 		threetextstrings = false;
 
-		mytextsize = height/8;
-		textlocx = width/2;
-		textlocy = (height/2) + height/12;
+		mytextsize = modheight/18;
+		textlocx = modwidth/2;
+		textlocy = (modheight/2) + (modheight/12);
 		texttransparency = 255;
-		textstring = "Enter";
+		textstring = "ENTER";
 
 		if (locked){
 			unlock();
 		}
 
-		// image(landing, 0, 0, width, height);
-		// image(landing, 0, 0, width, height, 0, 0, landing.width, landing.height, constrain);
-		// rect(width/2, height/2+height/12, height/24*3, height/24);
-
-		if (mouseX/width >= .46 && mouseX/width <= .53 && mouseY/height <= .604 && mouseY/height >= .569){
+		// textcontainer.rect(modwidth/2, (modheight/2)+(modheight/12), textcontainer.textSize()*3.2,textcontainer.textSize());
+		// textcontainer.ellipse(modwidth/2 - ((textcontainer.textSize()*3.2)/2), (modheight/2)+(modheight/12), 5, 5);
+		// textcontainer.ellipse(modwidth/2 + ((textcontainer.textSize()*3.2)/2), (modheight/2)+(modheight/12), 5, 5);
+		// textcontainer.ellipse(modwidth/2, ((modheight/2)+(modheight/12)) - textcontainer.textSize()/2, 5, 5);
+		// textcontainer.ellipse(modwidth/2, ((modheight/2)+(modheight/12)) + textcontainer.textSize()/2, 5, 5);
+		let tempmousey = mouseY - mody;
+		let tempmousex = mouseX - modx;
+		if (tempmousex >= modwidth/2 - ((textcontainer.textSize()*3.2)/2) && tempmousex <= modwidth/2 + ((textcontainer.textSize()*3.2)/2) && tempmousey <= ((modheight/2)+(modheight/12)) + textcontainer.textSize()/2 && tempmousey >= ((modheight/2)+(modheight/12)) - textcontainer.textSize()/2){
 			// print("yes");
 			text_fill = 200;
 
@@ -286,11 +294,17 @@ function draw() {
 		threetextstrings = false;
 
 		text_fill = 255;
-		mytextsize = (height/8);
-		textlocx = width/2;
-		textlocy = height/2;
+		mytextsize = (modheight/18);
+		textlocx = modwidth/2;
+		textlocy = modheight/2;
 		texttransparency = playing ? 0 : 255;
-		textstring = "Speak to begin. Say: I am the Human Agent.";
+
+		if (!detected){
+			textstring = "SPEAK TO BEGIN. SAY: I AM THE HUMAN AGENT.";
+		} else {
+			textstring = "CALIBRATION COMPLETE";
+		}
+		
 
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
@@ -322,7 +336,7 @@ function draw() {
 		
 
 		if (playing){
-			xcoord = 0;
+			// xcoord = 0;
 			timer = 0;
 		}
 
@@ -335,6 +349,8 @@ function draw() {
 				switchscene(2);
 				starttimer(3);
 				playing = false;
+				xcoord = -10;
+				detected = false;
 				// notspeaking = true;
 			}
 		
@@ -343,25 +359,29 @@ function draw() {
 	// welcome online + intro // begin locked, unlock to play
 	if (scene == 2){
 
+		// check for timer?
+
 		threetextstrings = false;
 
 		text_fill = 255;
-		mytextsize = (height/8);
-		textlocx = width/2;
-		textlocy = height/2;
+		mytextsize = (modheight/18);
+		textlocx = modwidth/2;
+		textlocy = modheight/2;
 		texttransparency = playing ? 0 : 255;
-		textstring = "Welcome Online Human Agent";
+		textstring = "WELCOME ONLINE HUMAN AGENT";
 
 		updatex();
 		// ellipse(xcoord, height/40, height/60, height/60);
 		// xcoord += normtime;
 
 		if (playing){
-			xcoord = 0;
+			// xcoord = -10;
 			timer = 0;
 		}
 
+		// locked && !keyIsPressed && xcoord >= width 
 		if (locked && !keyIsPressed && xcoord >= width ){	
+			textcontainer.clear();
 			unlock();
 		}
 
@@ -379,25 +399,28 @@ function draw() {
 		threetextstrings = true;
 
 		text_fill = 255;
-		mytextsize = (height/8);
-		textlocx = width/2;
-		textlocy = height/2 - ((height/8));
-		textlocx2 = width/2;
-		textlocy2 = height/2;
-		textlocx3 = width/2;
-		textlocy3 = height/2 + ((height/8));
+		mytextsize = (modheight/18);
+		textlocx = modwidth/2;
+		textlocy = modheight/2 - ((modheight/8));
+		textlocx2 = modwidth/2;
+		textlocy2 = modheight/2;
+		textlocx3 = modwidth/2;
+		textlocy3 = modheight/2 + ((modheight/8));
 		texttransparency = playing ? 0 : 255;
-		textstring = "Speak into the mic - your tone becomes data"; 
-		textstring2 = "Frequency becomes visual";
-		textstring3 = "3 questions to elevate your frequency";
+		textstring = "SPEAK INTO THE MIC - YOUR TONE BECOMES DATA"; 
+		textstring2 = "FREQUENCY BECOMES VISUAL";
+		textstring3 = "3 QUESTIONS TO ELEVATE YOUR FREQUENCY";
 
 		updatex();
 		// ellipse(xcoord, height/40, height/60, height/60);
 
 		if (!locked && !keyIsPressed && xcoord >= width ){	
 			lock();
-			xcoord = 0;
+			xcoord = -10;
 			notspeaking = true;
+			textcontainer.clear();
+			textcontainer2.clear();
+			textcontainer3.clear();
 		}
 
 	}
@@ -456,11 +479,17 @@ function draw() {
 		threetextstrings = false;
 
 		text_fill = 255;
-		mytextsize = (height/8);
-		textlocx = width/2;
-		textlocy = height/2;
+		mytextsize = (modheight/18);
+		textlocx = modwidth/2;
+		textlocy = modheight/2;
 		texttransparency = playing ? 0 : 255;
-		textstring = "What are you seeking: Power or Peace?";
+
+		if (!detected){
+			textstring = "What are you seeking: Power or Peace?";
+		} else {
+			textstring = detectedemotion;
+		}
+		
 
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
@@ -498,8 +527,10 @@ function draw() {
 				// starttimer(10);
 				notspeaking = true;
 			}
-			xcoord = 0;
+			xcoord = -10;
 			timer = 0;
+			textcontainer.clear();
+			detected = false;
 		}
 	}
 
@@ -507,11 +538,17 @@ function draw() {
 	if (scene == 5){
 
 		text_fill = 255;
-		mytextsize = (height/8);
-		textlocx = width/2;
-		textlocy = height/2;
+		mytextsize = (modheight/18);
+		textlocx = modwidth/2;
+		textlocy = modheight/2;
 		texttransparency = playing ? 0 : 255;
-		textstring = "What truth have you hidden from yourself?";
+
+		if (!detected){
+			textstring = "What truth have you hidden from yourself?";
+		} else {
+			textstring = detectedemotion;
+		}
+		
 
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
@@ -549,8 +586,10 @@ function draw() {
 				// starttimer(10);
 				notspeaking = true;
 			}
-			xcoord = 0;
+			xcoord = -10;
 			timer = 0;
+			textcontainer.clear();
+			detected = false;
 		}
 
 	}
@@ -559,11 +598,17 @@ function draw() {
 	if (scene == 6){ 
 
 		text_fill = 255;
-		mytextsize = (height/8);
-		textlocx = width/2;
-		textlocy = height/2;
+		mytextsize = (modheight/18);
+		textlocx = modwidth/2;
+		textlocy = modheight/2;
 		texttransparency = playing ? 0 : 255;
-		textstring = "Are you ready to recalibrate your reality?";
+
+		if (!detected){
+			textstring = "Are you ready to recalibrate your reality?";
+		} else {
+			textstring = detectedemotion;
+		}
+		
 
 		if (level >= .002 && notspeaking && !playing){
 			// updatex();
@@ -601,8 +646,10 @@ function draw() {
 				locked = true;
 				notspeaking = true;
 			}
-			xcoord = 0;
+			xcoord = -10;
 			timer = 0;
+			textcontainer.clear();
+			detected = false;
 		}
 	}
 
@@ -610,60 +657,80 @@ function draw() {
 		image(activevideo, modx, mody, modwidth, modheight);
 	}
 
-	fill(text_fill, texttransparency);
+	textcontainer.fill(text_fill, texttransparency);
 
 	// textSize(height/12);
 	// text("Ascended Intelligence", width/2, height/2);
 
-	textSize(mytextsize/scalefactor);
+	textcontainer.textSize(mytextsize/scalefactor);
 
 	if (threetextstrings){
-		text(textstring, textlocx, textlocy);
-		text(textstring2, textlocx2, textlocy2);
-		text(textstring3, textlocx3, textlocy3);
+		textcontainer2.textSize(mytextsize/scalefactor);
+		textcontainer3.textSize(mytextsize/scalefactor);
+		textcontainer2.fill(text_fill, texttransparency);
+		textcontainer3.fill(text_fill, texttransparency);
+		textcontainer.clear();
+		textcontainer2.clear();
+		textcontainer3.clear();
+		textcontainer.text(textstring, textlocx, textlocy);
+		textcontainer2.text(textstring2, textlocx2, textlocy2);
+		textcontainer3.text(textstring3, textlocx3, textlocy3);
+		image(textcontainer, modx, mody);
+		image(textcontainer2, modx, mody);
+		image(textcontainer3, modx, mody);
 
 	} else {
-		text(textstring, textlocx, textlocy);
+		textcontainer.clear();
+		textcontainer.text(textstring, textlocx, textlocy);
+		image(textcontainer, modx, mody);
 	}
 
-	
-
 	push();
-
 	breathe += speed;
 
 	if (breathe > 255 || breathe < 0){
 		speed = -speed;
 	} 
 
-	textSize((height/12)/scalefactor);
+	textcontainer.textSize((modheight/18)/scalefactor);
 
 	if (detecting){
 
+		textcontainer.clear();
+
 		if (scene == 1){
-			fill(breathe, 255);
-			text('Calibrating', width/2, height-(height/6));
+			textcontainer.fill(breathe, 255);
+			textcontainer.text('Calibrating', modwidth/2, modheight-(modheight/6));
+			image(textcontainer, modx, mody);
 
 		} else {
-			fill(breathe, 255);
-			text('Detecting Emotion', width/2, height-(height/6));
+			textcontainer.fill(breathe, 255);
+			textcontainer.text('Detecting Emotion', modwidth/2, modheight-(modheight/6));
+			image(textcontainer, modx, mody);
 
 		}
 
 	} else {
 
-		fill(255, 0);
-		text('Detecting Emotion', width/2, height-(height/6));
+		textcontainer.fill(255, 0);
+		textcontainer.text('Detecting Emotion', modwidth/2, modheight-(modheight/6));
 
 	}
-
 	pop();
 
+	// textbounds
+	// textcontainer.background(200, 127);
+	// textcontainer.fill(255, 127);
+	// textcontainer.rectMode(CENTER);
+	// textcontainer.rect(modwidth/2, (modheight/2)+(modheight/12), textcontainer.textSize()*3.2,textcontainer.textSize());
+	// textcontainer.ellipse(modwidth/2 - ((textcontainer.textSize()*3.2)/2), (modheight/2)+(modheight/12), 5, 5);
+	// textcontainer.ellipse(modwidth/2 + ((textcontainer.textSize()*3.2)/2), (modheight/2)+(modheight/12), 5, 5);
+	// textcontainer.ellipse(modwidth/2, ((modheight/2)+(modheight/12)) - textcontainer.textSize()/2, 5, 5);
+	// textcontainer.ellipse(modwidth/2, ((modheight/2)+(modheight/12)) + textcontainer.textSize()/2, 5, 5);
+	// image(textcontainer, modx, mody);
 	
-	image(textcontainer, modx, mody);
-
 	// console.log("scene: " + scene);
-	// console.log("locked: " + locked);
+	console.log("locked: " + locked);
 	// console.log("playing: " + playing);
 	// console.log("timer: " + timer);
 	// console.log("normtime: " + normtime);
@@ -674,8 +741,13 @@ function draw() {
 	// console.log("aspect ratio: " + aspectratio);
 	// console.log("notspeaking: " + notspeaking);
 	// console.log("width: " + width);
+	// console.log('height: ' + height);
+	// console.log('modheight: ' + modheight);
+	// console.log("modwidth: " + modwidth);
 	// console.log('detecting: ' + detecting);
 	// console.log('breathe: ' + breathe);
+	// console.log('detected: ' + detected);
+	
 	
 }
 
@@ -742,7 +814,8 @@ async function sendAudioToAPI(blob){
 		console.log('predicting...');
 		detecting = true;
 
-		const response = await fetch('https://ai-emotion-api.sliplane.app/predict',
+		// https://ai-emotion-api.sliplane.app/predict
+		const response = await fetch('http://localhost:7860/predict',
 			{
 				method: 'POST',
 				body: formData
@@ -753,16 +826,19 @@ async function sendAudioToAPI(blob){
 		console.log('predicted emotion: ', result.emotion);
 		detectedemotion = result.emotion;
 		detecting = false;
+		detected = true;
 
 		if (scene == 1){
-			switchvideo(afterlanding);
+			setTimeout(() => switchvideo(afterlanding), 3000);
+			textcontainer.clear();
+			// switchvideo(afterlanding);
 			locked = true;
 		} else if (scene == 4){
-			unlock();
+			setTimeout(() => unlock(), 3000);
 		} else if (scene == 5){
-			lock();
+			setTimeout(() => lock(), 3000);
 		} else if (scene ==6){
-			unlock();
+			setTimeout(() => unlock(), 3000);
 		}
 
 		return result.emotion;
@@ -779,7 +855,7 @@ function starttimer(seconds){
 function updatex(){
 
 	let progress = (millis() - starttime)/duration;
-	progress = constrain(progress, 0, 1);
+	progress = constrain(progress, 0, 1.01);
 	xcoord = progress * width;
 		
 }
@@ -910,8 +986,11 @@ function mousePressed() {
 		mic.start(() => console.log("mic started"), err => console.error(err));
 	}
 
+	let tempmousey = mouseY - mody;
+	let tempmousex = mouseX - modx;
+
   // Check if click is in the "Enter" button area
-  if (scene == 0 && mouseX/width >= 0.46 && mouseX/width <= 0.53 && mouseY/height >= 0.569 && mouseY/height <= 0.604) {
+  if (scene == 0 && tempmousex >= modwidth/2 - ((textcontainer.textSize()*3.2)/2) && tempmousex <= modwidth/2 + ((textcontainer.textSize()*3.2)/2) && tempmousey <= ((modheight/2)+(modheight/12)) + textcontainer.textSize()/2 && tempmousey >= ((modheight/2)+(modheight/12)) - textcontainer.textSize()/2) {
 
     // if (playing){
 	// 	landing.pause();
@@ -919,9 +998,11 @@ function mousePressed() {
 	// 	landing.play();
 	// }
 
+	textcontainer.clear();
 	playing = !playing;
 	switchscene(1);
 	// starttimer(10);
+	xcoord = -10;
     
   }
 }
@@ -962,6 +1043,7 @@ function keyPressed(){
 	else if (scene == 6 && keyCode == 13 && locked){
 		unlock();
 	}
+	textcontainer.clear();
 }
 
 function switchvideo(v){
