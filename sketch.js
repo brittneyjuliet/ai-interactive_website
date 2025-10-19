@@ -1,4 +1,5 @@
 let testbool = false;
+let landingloaded = false;
 
 let density;
 let textcontainer;
@@ -36,7 +37,7 @@ let textlocy;
 let textlocy2;
 let textlocy3;
 let mytextsize;
-let texttransparency = 255;
+let texttransparency = 0;
 let threetextstrings = false;
 let breathe = 255;
 let speed = 2;
@@ -89,7 +90,7 @@ function preload(){
 	moviefiles[4] = new Array("assets/anger3compressed.mp4", "assets/calm3compressed.mp4", "assets/curious3compressed.mp4", "assets/joy3compressed.mp4", "assets/sad3compressed.mp4");
 
 	//pre-experience
-	landing = createVideo(moviefiles[0]);
+	landing = createVideo(moviefiles[0], showenter);
 	landing.volume(0);
 	landing.hide();
 
@@ -193,6 +194,10 @@ function preload(){
 
 }
 
+function showenter(){
+	landingloaded = true;
+}
+
 function windowResized(){
 	setup();
 }
@@ -260,10 +265,15 @@ function draw() {
 
 		threetextstrings = false;
 
+		if (landingloaded && texttransparency < 256){
+			texttransparency+=2;
+			console.log('test');
+		}
+
 		mytextsize = modheight/18;
 		textlocx = modwidth/2;
 		textlocy = (modheight/2) + (modheight/12);
-		texttransparency = 255;
+		// texttransparency = 0;
 		textstring = "ENTER";
 
 		if (locked){
