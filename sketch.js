@@ -755,7 +755,7 @@ function draw() {
 	// console.log("playing: " + playing);
 	// console.log("timer: " + timer);
 	// console.log("normtime: " + normtime);
-	// console.log("xcoord: " + xcoord);
+	console.log("xcoord: " + xcoord);
 	// console.log("stage1select: " + stage1select);
 	// console.log("selectrandvid: " + selectrandvid(stage1select));
 	// console.log("keypress check: " + keyIsPressed);
