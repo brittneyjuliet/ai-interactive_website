@@ -382,7 +382,7 @@ function draw() {
 		textlocx = modwidth/2;
 		textlocy = modheight/2;
 		texttransparency = playing ? 0 : 255;
-		textstring = "WELCOME ONLINE HUMAN AGENT";
+		textstring = "WELCOME TO THE SMART CITY OF 2030";
 
 		updatex();
 		// ellipse(xcoord, height/40, height/60, height/60);
@@ -424,7 +424,7 @@ function draw() {
 		texttransparency = playing ? 0 : 255;
 		textstring = "SPEAK INTO THE MIC - YOUR TONE BECOMES DATA"; 
 		textstring2 = "FREQUENCY BECOMES VISUAL";
-		textstring3 = "3 QUESTIONS TO ELEVATE YOUR FREQUENCY";
+		textstring3 = "3 QUESTIONS, SHORT ANSWERS, TO ELEVATE FREQUENCY. READY?";
 
 		updatex();
 		// ellipse(xcoord, height/40, height/60, height/60);
@@ -500,7 +500,7 @@ function draw() {
 		texttransparency = playing ? 0 : 255;
 
 		if (!detected){
-			textstring = "WHAT ARE YOU SEEKING: POWER OR PEACE?";
+			textstring = "MAKE A SOUND TO REFLECT HOW YOU FEEL";
 		} else {
 			textstring = "YOUR FREQUENCY IS: " + detectedemotion;
 		}
@@ -559,7 +559,7 @@ function draw() {
 		texttransparency = playing ? 0 : 255;
 
 		if (!detected){
-			textstring = "WHAT TRUTH HAVE YOU HIDDEN FROM YOURSELF?";
+			textstring = "WHAT'S CALLING YOU'?";
 		} else {
 			textstring = "YOUR FREQUENCY IS: " + detectedemotion;
 		}
@@ -619,7 +619,7 @@ function draw() {
 		texttransparency = playing ? 0 : 255;
 
 		if (!detected){
-			textstring = "ARE YOU READY TO RECALIBRATE YOUR REALITY?";
+			textstring = "WILL YOU ANSWER?";
 		} else {
 			textstring = "YOUR FREQUENCY IS: " + detectedemotion;
 		}
