@@ -394,7 +394,7 @@ function draw() {
 		}
 
 		// locked && !keyIsPressed && xcoord >= width 
-		if (locked && !keyIsPressed && xcoord >= width ){	
+		if (locked && xcoord >= width ){	
 			textcontainer.clear();
 			unlock();
 		}
@@ -429,7 +429,7 @@ function draw() {
 		updatex();
 		// ellipse(xcoord, height/40, height/60, height/60);
 
-		if (!locked && !keyIsPressed && xcoord >= width ){	
+		if (!locked && xcoord >= width ){	
 			lock();
 			xcoord = -10;
 			notspeaking = true;
@@ -755,7 +755,7 @@ function draw() {
 	// console.log("playing: " + playing);
 	// console.log("timer: " + timer);
 	// console.log("normtime: " + normtime);
-	console.log("xcoord: " + xcoord);
+	// console.log("xcoord: " + xcoord);
 	// console.log("stage1select: " + stage1select);
 	// console.log("selectrandvid: " + selectrandvid(stage1select));
 	// console.log("keypress check: " + keyIsPressed);
@@ -768,6 +768,7 @@ function draw() {
 	// console.log('detecting: ' + detecting);
 	// console.log('breathe: ' + breathe);
 	// console.log('detected: ' + detected);
+	// console.log("keypressed: " + keyIsPressed);
 	
 	
 }
